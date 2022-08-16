@@ -1,23 +1,31 @@
-import pandas as pd
-import numpy as np
-from zipfile import ZipFile
+import ast
 import gzip
+import io
+import json
 import os
 import re
-from math import ceil
-import openpyxl
-from zipfile import ZipFile
-import gzip
-from gzip import GzipFile
-from collections import Counter
-import json
-import ast
-from itertools import combinations
-import io
 import warnings
+from collections import Counter
+from gzip import GzipFile
+from itertools import combinations
+from math import ceil
+from zipfile import ZipFile
+
+import numpy as np
+import openpyxl
+import pandas as pd
 
 
 def getFileManager(obj, sourceobj=None, file_encoding=None):
+    """
+    Return your values.
+    Parameters
+    ----------
+    values : 1D list-like
+    Returns
+    -------
+    tuple of (values, count)
+    """
     if (isinstance(obj, str) and ".zip" in obj) or isinstance(obj, ZipFile):
         return ZipManager(obj, sourceobj, file_encoding)
     elif (
@@ -36,8 +44,20 @@ def getFileManager(obj, sourceobj=None, file_encoding=None):
 
 
 class FilesHelper:
+    """
+    Description of my class
+    Attributes
+    ----------
+    None
+    Methods
+    -------
+    None
+    Examples
+    --------
+    >>> mc = MyClass()
+    """
     def __init__(self, target, **kwargs):
-        """Initialize and set target non-case-sensitive file stem or keywords, usually in form 'MyFundD' or 'MyFundD_Data'"""
+        """Initialize and set target non-case-sensitive file stem or keywords, usually in form 'MyEnv' or 'MyEnv_Data'"""
         self.target = target
 
     @staticmethod
@@ -53,6 +73,18 @@ class FilesHelper:
 
 
 class BaseFileManager:
+    """
+    Description of my class
+    Attributes
+    ----------
+    None
+    Methods
+    -------
+    None
+    Examples
+    --------
+    >>> mc = MyClass()
+    """
     def __init__(self, obj, sourceobj=None, file_encoding=None):
         self.sourceobj = sourceobj
         self.file_encoding = file_encoding
@@ -99,7 +131,7 @@ class BaseFileManager:
             raise NotImplementedError(
                 f"Opening unknown filetype: {self.fileobj}")
 
-    def infer_delimiter(self):
+    def _infer_delimiter(self):
         try:
             sample1, sample2 = self.fileobj.readline(), self.fileobj.readline()
             self.fileobj.seek(0, 0)
@@ -137,6 +169,15 @@ class BaseFileManager:
         json_key=None,
         add_filename=True,
     ):
+        """
+        Return your values.
+        Parameters
+        ----------
+        values : 1D list-like
+        Returns
+        -------
+        tuple of (values, count)
+        """
         try:
             self.open()
             if "csv" in self.filetype:
@@ -163,7 +204,7 @@ class BaseFileManager:
                 df = pd.read_excel(self.fileobj.read())
             elif "txt" in self.filetype:
                 if delimiter == "infer":
-                    delimiter_pack = self.infer_delimiter()
+                    delimiter_pack = self._infer_delimiter()
                     self.inferred_delimiter_pack = delimiter_pack
                     inferred_delimiter = delimiter_pack[0]
                     df = pd.read_csv(
@@ -206,6 +247,18 @@ class BaseFileManager:
 
 
 class FilesManager:
+    """
+    Description of my class
+    Attributes
+    ----------
+    None
+    Methods
+    -------
+    None
+    Examples
+    --------
+    >>> mc = MyClass()
+    """
     def __init__(self, filenames, sourceobj=None, file_encoding=None):
         self.filenames = filenames
         self.sourceobj = sourceobj
@@ -218,6 +271,18 @@ class FilesManager:
 
 
 class ZipManager(FilesManager):
+    """
+    Description of my class
+    Attributes
+    ----------
+    None
+    Methods
+    -------
+    None
+    Examples
+    --------
+    >>> mc = MyClass()
+    """
     def __init__(self, obj, sourceobj=None, file_encoding=None):
         self.sourceobj = sourceobj
         if isinstance(obj, str):
@@ -245,6 +310,15 @@ class ZipManager(FilesManager):
         json_key=None,
         add_filename=True,
     ):
+        """
+        Return your values.
+        Parameters
+        ----------
+        values : 1D list-like
+        Returns
+        -------
+        tuple of (values, count)
+        """
         temp = pd.DataFrame()
         filenames = self.filemanagers.keys() if not filenames else filenames
         for filename in filenames:
@@ -271,6 +345,15 @@ class ZipManager(FilesManager):
         json_key=None,
         add_filename=True,
     ):
+        """
+        Return your values.
+        Parameters
+        ----------
+        values : 1D list-like
+        Returns
+        -------
+        tuple of (values, count)
+        """
         if not filename:
             filename = self.fileobj.namelist()[0]
         try:
