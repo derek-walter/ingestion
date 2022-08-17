@@ -18,10 +18,11 @@ import pandas as pd
 
 def getFileManager(obj, sourceobj=None, file_encoding=None):
     """
-    Return your values.
+    Return either the proper file manager or a dictionary of managers
     Parameters
     ----------
-    values : 1D list-like
+    sourceobj : file object
+    file_encoding : file encoding
     Returns
     -------
     tuple of (values, count)
@@ -45,13 +46,13 @@ def getFileManager(obj, sourceobj=None, file_encoding=None):
 
 class FilesHelper:
     """
-    Description of my class
+    Simple file categorizer
     Attributes
     ----------
     None
     Methods
     -------
-    None
+    list_categories : List the file names by groups separated by _
     Examples
     --------
     >>> mc = MyClass()
@@ -74,7 +75,7 @@ class FilesHelper:
 
 class BaseFileManager:
     """
-    Description of my class
+    Handles all files at the single file level, GZip, io.IOBase
     Attributes
     ----------
     None
