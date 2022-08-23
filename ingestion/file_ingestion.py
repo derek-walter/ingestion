@@ -25,7 +25,7 @@ def getFileManager(obj, sourceobj=None, file_encoding=None):
     file_encoding : file encoding
     Returns
     -------
-    tuple of (values, count)
+    Manager, dict key : Manager
     """
     if (isinstance(obj, str) and ".zip" in obj) or isinstance(obj, ZipFile):
         return ZipManager(obj, sourceobj, file_encoding)
@@ -106,7 +106,7 @@ class BaseFileManager:
         self.fileobj = obj
 
     def open(self, mode="r"):
-        """Attempt to open a file of many types, will attempt to import the artifact once if not found but will error if unsuccessful."""
+        """Attempt to open a file of many types"""
         if self.sourceobj:
             if isinstance(self.sourceobj, str):
                 self.sourceobj = ZipFile(self.sourceobj, mode)
@@ -140,8 +140,7 @@ class BaseFileManager:
                 sample1.decode() if isinstance(sample1, bytes) else sample1,
                 sample2.decode() if isinstance(sample2, bytes) else sample2,
             )
-            # TODO: Not multi-len delimiter safe. Example: matching ~| and
-            # double matching \t for null cells ... (\t\t) -> (\t, \t) not easy
+            # TODO: Not multi-len delimiter safe.
 
             def _delims(x):
                 return re.findall("[\\t|,~;]", x)
@@ -265,7 +264,7 @@ class FilesManager:
         self.sourceobj = sourceobj
         self.filemanagers = {
             filename: getFileManager(
-                filename, self.src_asset_id, self.sourceobj, file_encoding
+                filename, self.sourceobj, file_encoding
             )
             for filename in self.filenames
         }
